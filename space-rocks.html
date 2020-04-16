@@ -389,7 +389,7 @@ Nave.prototype.frame = function(){
 Nave.prototype.dispara = function(){
   var b = new Bala();
   var t = [this.translacion[0], this.translacion[1]];
-  b.inicializa(this.escenario, t);
+  b.inicializa(this.escenario, t, this.rotacion);
 }
 
 function Roca(){
@@ -488,12 +488,32 @@ Bala.prototype.pointsCount = function(){
 Bala.prototype.primitive = function(){
   return this.escenario.gl.POINTS;
 };
-Bala.prototype.inicializa = function(escenario, translacion){
+Bala.prototype.inicializa = function(escenario, translacion, direccion){
   Sprite.prototype.inicializa.call(this, escenario);
 
   this.translacion = translacion;
+  this.direccion = direccion;
+  this.velocidad = 0.25;
   console.log(escenario);
 };
+Bala.prototype.frame = function(){
+  var e = this.escenario;
+  
+  this.translacion[0] += this.velocidad * Math.sin(this.direccion);
+  this.translacion[1] += this.velocidad * Math.cos(this.direccion);
+
+
+  if (this.translacion[0] > e.zoom * e.resolution[0]){
+    this.translacion[0] = e.zoom * e.resolution[0] * -1;
+  } else if (this.translacion[0] < e.zoom * e.resolution[0] * -1){
+    this.translacion[0] = e.zoom * e.resolution[0];
+  }
+  if (this.translacion[1] > e.zoom * e.resolution[1]){
+    this.translacion[1] = e.zoom * e.resolution[1] * -1;
+  } else if (this.translacion[1] < e.zoom * e.resolution[1] * -1){
+    this.translacion[1] = e.zoom * e.resolution[1];
+  }
+}
 
 function inicializa(gl, elemento){
   console.log("WebGL está soportado por el navegador");
