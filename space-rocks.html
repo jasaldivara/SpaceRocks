@@ -141,6 +141,12 @@ Escenario.prototype = {
   addSprite: function (sprite){
     this.sprites.push(sprite);
   },
+  removeSprite: function (sprite){
+    var i  = this.sprites.indexOf(sprite);
+    if (i > -1){
+      this.sprites.splice(i, 1);
+    }
+  },
   draw: function (tiempo){
     this.gl.useProgram(this.program);
 
@@ -498,10 +504,16 @@ Bala.prototype.inicializa = function(escenario, translacion, direccion){
   this.translacion = translacion;
   this.direccion = direccion;
   this.velocidad = 0.25;
+  this.duracion = escenario.zoom * 2 / this.velocidad;
   console.log(escenario);
 };
 Bala.prototype.subframe = function(){
   var e = this.escenario;
+
+  this.duracion --;
+  if (this.duracion <= 0){
+    e.removeSprite(this);
+  }
   
   this.translacion[0] += this.velocidad * Math.sin(this.direccion);
   this.translacion[1] += this.velocidad * Math.cos(this.direccion);
