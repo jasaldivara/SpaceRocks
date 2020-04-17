@@ -245,7 +245,22 @@ Sprite.prototype = {
     gl.uniform1f(this.escenario.rotacionUniformLocation, this.rotacion);
     gl.drawArrays(this.primitive(), this.firstPoint(), this.pointsCount());  // La cantidad de puntos a procesar depende de la clase en particular
   },
-  frame: function(){}
+  frame: function(){
+    this.subframe();
+    var e = this.escenario;
+
+    if (this.translacion[0] > e.zoom * e.resolution[0]){
+      this.translacion[0] = e.zoom * e.resolution[0] * -1;
+    } else if (this.translacion[0] < e.zoom * e.resolution[0] * -1){
+      this.translacion[0] = e.zoom * e.resolution[0];
+    }
+    if (this.translacion[1] > e.zoom * e.resolution[1]){
+      this.translacion[1] = e.zoom * e.resolution[1] * -1;
+    } else if (this.translacion[1] < e.zoom * e.resolution[1] * -1){
+      this.translacion[1] = e.zoom * e.resolution[1];
+    }
+  },
+  subframe: function(){}
 };
 
 function Nave(){}
@@ -337,7 +352,7 @@ Nave.prototype.setColors = function(){
 Nave.prototype.pointsCount = function(){
   return 6;
 }
-Nave.prototype.frame = function(){
+Nave.prototype.subframe = function(){
   const deltaTime = 0.03;
   var e = this.escenario;
 
@@ -372,7 +387,7 @@ Nave.prototype.frame = function(){
   this.translacion[0] += this.velocidadAvanza[0];
   this.translacion[1] += this.velocidadAvanza[1];
 
-
+  /*
   if ((this.velocidadAvanza[0] > 0) && (this.translacion[0] > (e.zoom * e.resolution[0]) + 1)){
     this.translacion[0] = (e.zoom * e.resolution[0] * -1) - 1;
   } 
@@ -385,6 +400,7 @@ Nave.prototype.frame = function(){
   if ((this.velocidadAvanza[1] < 0) && (this.translacion[1] < (e.zoom * e.resolution[1] * -1) - 1)){
     this.translacion[1] = (e.zoom * e.resolution[1]) + 1;
   }
+  */
 }
 Nave.prototype.dispara = function(){
   var b = new Bala();
@@ -438,23 +454,11 @@ Roca.prototype.pointsCount = function(){
 Roca.prototype.primitive = function(){
   return this.escenario.gl.TRIANGLE_FAN;
 }
-Roca.prototype.frame = function (){
+Roca.prototype.subframe = function (){
   var e = this.escenario;
   
   this.translacion[0] += this.velocidad * Math.sin(this.direccion);
   this.translacion[1] += this.velocidad * Math.cos(this.direccion);
-
-
-  if (this.translacion[0] > e.zoom * e.resolution[0]){
-    this.translacion[0] = e.zoom * e.resolution[0] * -1;
-  } else if (this.translacion[0] < e.zoom * e.resolution[0] * -1){
-    this.translacion[0] = e.zoom * e.resolution[0];
-  }
-  if (this.translacion[1] > e.zoom * e.resolution[1]){
-    this.translacion[1] = e.zoom * e.resolution[1] * -1;
-  } else if (this.translacion[1] < e.zoom * e.resolution[1] * -1){
-    this.translacion[1] = e.zoom * e.resolution[1];
-  }
 }
 Roca.prototype.inicializa = function(escenario){
   Sprite.prototype.inicializa.call(this, escenario);
@@ -496,23 +500,12 @@ Bala.prototype.inicializa = function(escenario, translacion, direccion){
   this.velocidad = 0.25;
   console.log(escenario);
 };
-Bala.prototype.frame = function(){
+Bala.prototype.subframe = function(){
   var e = this.escenario;
   
   this.translacion[0] += this.velocidad * Math.sin(this.direccion);
   this.translacion[1] += this.velocidad * Math.cos(this.direccion);
-
-
-  if (this.translacion[0] > e.zoom * e.resolution[0]){
-    this.translacion[0] = e.zoom * e.resolution[0] * -1;
-  } else if (this.translacion[0] < e.zoom * e.resolution[0] * -1){
-    this.translacion[0] = e.zoom * e.resolution[0];
-  }
-  if (this.translacion[1] > e.zoom * e.resolution[1]){
-    this.translacion[1] = e.zoom * e.resolution[1] * -1;
-  } else if (this.translacion[1] < e.zoom * e.resolution[1] * -1){
-    this.translacion[1] = e.zoom * e.resolution[1];
-  }
+  
 }
 
 function inicializa(gl, elemento){
