@@ -501,6 +501,9 @@ Bala.prototype.primitive = function(){
 Bala.prototype.inicializa = function(escenario, translacion, direccion){
   Sprite.prototype.inicializa.call(this, escenario);
 
+  translacion[0] += 1 * Math.sin(direccion);
+  translacion[1] += 1 * Math.cos(direccion);
+
   this.translacion = translacion;
   this.direccion = direccion;
   this.velocidad = 0.25;
