@@ -507,7 +507,7 @@ Bala.prototype.inicializa = function(escenario, translacion, direccion){
   this.translacion = translacion;
   this.direccion = direccion;
   this.velocidad = 0.25;
-  this.duracion = escenario.zoom * 2 / this.velocidad;
+  this.duracion = (escenario.zoom - 1) * 2 / this.velocidad;
   console.log(escenario);
 };
 Bala.prototype.subframe = function(){
