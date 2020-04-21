@@ -411,7 +411,7 @@ Nave.prototype.subframe = function(){
 Nave.prototype.dispara = function(){
   var b = new Bala();
   var t = [this.translacion[0], this.translacion[1]];
-  b.inicializa(this.escenario, t, this.rotacion);
+  b.inicializa(this.escenario, t, this.rotacion, this.velocidadAvanza[0], this.velocidadAvanza[1]);
 }
 
 function Roca(){
@@ -498,17 +498,19 @@ Bala.prototype.pointsCount = function(){
 Bala.prototype.primitive = function(){
   return this.escenario.gl.POINTS;
 };
-Bala.prototype.inicializa = function(escenario, translacion, direccion){
+Bala.prototype.inicializa = function(escenario, translacion, direccion, nvx, nvy){
   Sprite.prototype.inicializa.call(this, escenario);
 
   translacion[0] += 1 * Math.sin(direccion);
   translacion[1] += 1 * Math.cos(direccion);
 
   this.translacion = translacion;
-  this.direccion = direccion;
-  this.velocidad = 0.25;
-  this.duracion = (escenario.zoom - 1) * 2 / this.velocidad;
-  console.log(escenario);
+  //this.direccion = direccion;
+  var velocidad = 0.25;
+  this.vx = (velocidad * Math.sin(direccion)) + nvx;
+  this.vy = (velocidad * Math.cos(direccion)) + nvy;
+  this.duracion = (escenario.zoom - 1) * 2 / velocidad;
+  //console.log(escenario);
 };
 Bala.prototype.subframe = function(){
   var e = this.escenario;
@@ -518,8 +520,8 @@ Bala.prototype.subframe = function(){
     e.removeSprite(this);
   }
   
-  this.translacion[0] += this.velocidad * Math.sin(this.direccion);
-  this.translacion[1] += this.velocidad * Math.cos(this.direccion);
+  this.translacion[0] += this.vx;
+  this.translacion[1] += this.vy;
   
 }
 
