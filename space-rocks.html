@@ -96,9 +96,10 @@ function createProgram(gl, vertexShader, fragmentShader) {
 }
 
 
-function Escenario(gl){
+function Escenario(gl, tipos){
   this.gl = gl;
   this.sprites = [];
+  console.log(tipos);
 
   var vertexShaderSource = document.getElementById("2d-vertex-shader").text;
   var fragmentShaderSource = document.getElementById("2d-fragment-shader").text;
@@ -131,8 +132,16 @@ function Escenario(gl){
   }
 }
 Escenario.prototype = {
+  /*
   addSprite: function (sprite){
     this.sprites.push(sprite);
+  },
+  */
+  crearSprite: function(prototipo){
+    var s = new prototipo();
+    s.inicializa(this);
+    this.sprites.push(s);
+    return s;
   },
   removeSprite: function (sprite){
     var i  = this.sprites.indexOf(sprite);
@@ -200,7 +209,7 @@ Sprite.prototype = {
     this.rotacion = 0;
 
     this.escenario = escenario;
-    escenario.addSprite(this);
+    //escenario.addSprite(this);
     this.positionBuffer = escenario.gl.createBuffer();
     this.colorBuffer = escenario.gl.createBuffer();
 
@@ -395,6 +404,7 @@ Nave.prototype.dispara = function(){
   var b = new Bala();
   var t = [this.translacion[0], this.translacion[1]];
   b.inicializa(this.escenario, t, this.rotacion, this.velocidadAvanza[0], this.velocidadAvanza[1]);
+  this.escenario.sprites.push(b);
 }
 
 function Roca(){
@@ -509,17 +519,17 @@ Bala.prototype.subframe = function(){
   return [this.vx, this.vy];
 }
 
+var tipos = [Nave, Roca, Bala];
+
 function inicializa(gl, elemento){
   console.log("WebGL está soportado por el navegador");
   console.log (gl);
 
-  var e = new Escenario(gl);
-  var s = new Nave();
-  var r = new Roca();
-  var r2 = new Roca();
-  r.inicializa(e);
-  s.inicializa(e);
-  r2.inicializa(e);
+  var e = new Escenario(gl, tipos);
+  e.crearSprite(Nave);
+  e.crearSprite(Roca);
+  e.crearSprite(Roca);
+  e.crearSprite(Roca);
   e.draw();
 
 }
