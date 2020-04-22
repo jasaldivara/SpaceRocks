@@ -192,6 +192,37 @@ Escenario.prototype = {
       item.frame();
     });
 
+    // Loop de detección de colisiones
+    this.sprites.forEach(function(item, index){
+      e.sprites.forEach(function(item2, index2){
+        if (item2 === item){
+          return;
+        }
+        var instancia = false;
+        var tipos = item.tiposColisiona();
+        if (! tipos){
+          return;
+        }
+        for (var a = 0; a < tipos.length; a++){
+          if (item2 instanceof tipos[a]){
+            instancia = true;
+            break;
+          }
+        }
+        if (! instancia){
+          return;
+        }
+        var dx = Math.abs(item.translacion[0] - item2.translacion[0]);
+        var dy = Math.abs(item.translacion[1] - item2.translacion[1]);
+        var d = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+        var sr = item.radio() + item2.radio();
+        if (sr > d){
+          //alert('Colision');
+          item.eventoColisiona(item2);
+        }
+      });
+    });
+
     requestAnimationFrame(function(tiempo){
       e.draw(tiempo);
     });
@@ -210,6 +241,13 @@ Sprite.prototype = {
   },
   primitive: function(){
     return this.gl.TRIANGLES;
+  },
+  tiposColisiona: function(){
+    return null;
+  },
+  eventoColisiona: function(spcon){},
+  radio: function(){
+    return 1;
   },
   getPositionBuffer: function(){
     return this.positionBuffer;
@@ -296,6 +334,14 @@ Sprite.prototype = {
 
 function Nave(){}
 Nave.prototype = new Sprite();
+Nave.prototype.tiposColisiona = function(){
+  return [Roca];
+};
+Nave.prototype.eventoColisiona = function(spcon){
+  if (spcon instanceof Roca){
+    this.escenario.removeSprite(this);
+  }
+};
 Nave.prototype.protoInit = function(escenario){
   Sprite.prototype.protoInit.call(this, escenario);
   this.velocidadRota = 4;
@@ -554,6 +600,18 @@ Roca.prototype.inicializa = function(escenario){
 
 function Bala(){}
 Bala.prototype = new Sprite();
+Bala.prototype.tiposColisiona = function(){
+  return [Roca];
+};
+Bala.prototype.eventoColisiona = function(spcon){
+  if (spcon instanceof Roca){
+    this.escenario.removeSprite(spcon);
+    this.escenario.removeSprite(this);
+  }
+};
+Bala.prototype.radio = function(){
+  return 0;
+};
 Bala.prototype.setGeometry = function(){
   var gl = this.gl;
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
