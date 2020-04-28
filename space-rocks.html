@@ -4,16 +4,42 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Interacción en WebGL</title>
+  <title>Space Rocks</title>
   <style type="text/css">
 
-canvas { border: 1px solid #faa; }
+body {
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  background-color: #333;
+  color: rgb(222, 105, 238);
+}
+
+canvas {
+  border: 2px solid #3AA;
+}
+
+.boton {
+  font-size: xx-large;
+  text-transform: uppercase;
+  font-weight: bold;
+  padding: 1em;
+  color: #3FF;
+  background-color: #333;
+  cursor: pointer;
+  border: 2px solid #3AA;
+}
+
+.boton:hover {
+  color: #6DD;
+  background-color: #111;
+}
 
   </style>
 </head>
 <body>
-  <h1>Interacción en WebGL</h1>
-  <canvas id="lienzo" width="1200" height="800"></canvas>
+  <h1>Space Rocks</h1>
+  <form>
+    <button id="btnInicia" type="button" class="boton" autofocus>Iniciar juego</button>
+  </form>
 <script id="2d-vertex-shader" type="notjs">
  
   // an attribute will receive data from a buffer
@@ -67,6 +93,10 @@ canvas { border: 1px solid #faa; }
 
 <script type="text/javascript">
 
+// for legacy browsers
+const AudioContext = window.AudioContext || window.webkitAudioContext;
+
+const audioContext = new AudioContext();
 
 function createShader(gl, type, source) {
   var shader = gl.createShader(type);
@@ -158,6 +188,7 @@ Escenario.prototype = {
   },
   draw: function (tiempo){
     this.gl.useProgram(this.program);
+    var gl = this.gl;
 
     // set the resolution
     this.gl.uniform2f(this.resolutionUniformLocation, this.resolution[0], this.resolution[1]);
@@ -256,7 +287,7 @@ Sprite.prototype = {
     return this.colorBuffer;
   },
   protoInit: function(escenario){
-    this.gl = escenario.gl;
+    var gl = this.gl = escenario.gl;
 
     this.positionBuffer = escenario.gl.createBuffer();
     this.colorBuffer = escenario.gl.createBuffer();
@@ -675,22 +706,34 @@ function inicializa(gl, elemento){
 }
 
 
-var canvas = document.getElementById('lienzo');
 
-if (canvas.getContext) {
+var b = document.getElementById('btnInicia');
+b.addEventListener('click', function(e){
+  //alert (this);
+  var parent = this.parentElement.parentElement;
+  this.parentElement.removeChild(this);
+  var canvas = document.createElement('canvas');
+  canvas.setAttribute('width', '1200');
+  canvas.setAttribute('height', '800');
+  parent.appendChild(canvas);
 
-  var gl = canvas.getContext('webgl');
-  if (gl){
-    inicializa(gl, canvas);
+  //var canvas = document.getElementById('lienzo');
+
+  if (canvas.getContext) {
+
+    var gl = canvas.getContext('webgl');
+    if (gl){
+      inicializa(gl, canvas);
+    } else {
+      alert("Error: Navegador no soporta WebGL");
+    }
+
   } else {
-    alert("Error: Navegador no soporta WebGL");
+
+    alert("Navegador no soporta elemento canvas");
+
   }
-
-} else {
-
-  alert("Navegador no soporta elemento canvas");
-
-}
+});
 
 </script>
 
