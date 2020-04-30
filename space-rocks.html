@@ -102,7 +102,33 @@ canvas {
 // for legacy browsers
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 
-const audioContext = new AudioContext();
+
+function Sonido(){
+  this.ctx = new AudioContext();
+}
+Sonido.prototype.dispara = function(){
+  let duracion = 0.75;
+  var disparoOSC = this.ctx.createOscillator();
+  disparoOSC.type = 'square';
+  var disparoGain = this.ctx.createGain();
+  disparoOSC.frequency.setValueAtTime(1000, this.ctx.currentTime);
+
+  disparoGain.gain.cancelScheduledValues(this.ctx.currentTime);
+  disparoGain.gain.setValueAtTime(1, this.ctx.currentTime);
+  disparoOSC.frequency.exponentialRampToValueAtTime(850, this.ctx.currentTime + duracion);
+  //disparoOSC.detune.exponentialRampToValueAtTime(1000, this.ctx.currentTime + duracion);
+  disparoGain.gain.linearRampToValueAtTime(0, this.ctx.currentTime + duracion);
+  disparoOSC.connect(disparoGain).connect(this.ctx.destination);
+  disparoOSC.start();
+  disparoOSC.stop(this.ctx.currentTime + duracion);
+
+  disparoOSC.onended = function(){
+    console.log('oscilador teminó');
+    console.log(disparoOSC);
+    disparoOSC.disconnect();
+    disparoGain.disconnect();
+  }
+}
 
 function createShader(gl, type, source) {
   var shader = gl.createShader(type);
@@ -168,6 +194,8 @@ function Escenario(gl, tipos){
   } else {
     this.resolution[1] = gl.canvas.height / gl.canvas.width;
   }
+
+  this.sonido = new Sonido();
 
   tipos.forEach(function(item, index){
     //console.log(item);
@@ -509,6 +537,7 @@ Nave.prototype.dispara = function(){
   var t = [this.translacion[0], this.translacion[1]];
   b.inicializa(this.escenario, t, this.rotacion, this.velocidadAvanza[0], this.velocidadAvanza[1]);
   this.escenario.sprites.push(b);
+  this.escenario.sonido.dispara();
 }
 
 function Roca(){
