@@ -145,7 +145,7 @@ Sonido.prototype.hazRuido = function(){
   };
 };
 Sonido.prototype.dispara = function(){
-  let duracion = 0.75;
+  let duracion = 2;
   var disparoOSC = this.ctx.createOscillator();
   disparoOSC.type = 'square';
   var disparoGain = this.ctx.createGain();
@@ -153,9 +153,9 @@ Sonido.prototype.dispara = function(){
 
   disparoGain.gain.cancelScheduledValues(this.ctx.currentTime);
   disparoGain.gain.setValueAtTime(1, this.ctx.currentTime);
-  disparoOSC.frequency.exponentialRampToValueAtTime(850, this.ctx.currentTime + duracion);
+  disparoOSC.frequency.exponentialRampToValueAtTime(600, this.ctx.currentTime + duracion);
   //disparoOSC.detune.exponentialRampToValueAtTime(1000, this.ctx.currentTime + duracion);
-  disparoGain.gain.linearRampToValueAtTime(0, this.ctx.currentTime + duracion);
+  disparoGain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + duracion);
   disparoOSC.connect(disparoGain).connect(this.ctx.destination);
   disparoOSC.start();
   disparoOSC.stop(this.ctx.currentTime + duracion);
@@ -727,7 +727,7 @@ Bala.prototype.setGeometry = function(){
 Bala.prototype.setColors = function(){
   var gl = this.gl;
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
-    0.75, 0.25, 0.9, 1,
+    1, 0, 0.25, 1,
   ]), gl.STATIC_DRAW);
 };
 Bala.prototype.pointsCount = function(){
