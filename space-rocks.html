@@ -106,10 +106,14 @@ const AudioContext = window.AudioContext || window.webkitAudioContext;
 function Sonido(){
   this.ctx = new AudioContext();
 
-  this.ruido = this.ctx.createBuffer(1, 22050, 22050);
+  this.ruido = this.ctx.createBuffer(1, 44100, 44100);
+  var lastOut = 0.0;
   var samples = this.ruido.getChannelData(0);
   for(var i = 0; i < samples.length; i++){
-    samples[i] = Math.random() * 2 - 1;
+    var white = Math.random() * 2 - 1;
+    samples[i] = (lastOut + (0.05 * white)) / 1.05;
+    lastOut = samples[i];
+    samples[i] *= 2; // (roughly) compensate for gain
   }
 
   var filtro = this.ctx.createBiquadFilter();
