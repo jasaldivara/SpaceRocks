@@ -106,23 +106,38 @@ const AudioContext = window.AudioContext || window.webkitAudioContext;
 function Sonido(){
   this.ctx = new AudioContext();
 
-  this.ruido = this.ctx.createBuffer(1, 3500, 11025);
+  this.ruido = this.ctx.createBuffer(1, 22050, 22050);
   var samples = this.ruido.getChannelData(0);
   for(var i = 0; i < samples.length; i++){
     samples[i] = Math.random() * 2 - 1;
   }
+
+  var filtro = this.ctx.createBiquadFilter();
+  filtro.type = "lowpass";
+  filtro.frequency.value = 600;
+  filtro.Q.value = 100;
+  this.filtro = filtro;
+  //filtro.connect(this.ctx.destination);
 }
 Sonido.prototype.hazRuido = function(){
-  let duracion = 0.75;
+  let duracion = 2;
   var source = this.ctx.createBufferSource();
+  var expGain = this.ctx.createGain();
+  expGain.gain.setValueAtTime(1, this.ctx.currentTime);
+  //expGain.gain.exponentialRampToValueAtTime(1, this.ctx.currentTime + (duracion / 12));
+  expGain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + duracion);
   source.buffer = this.ruido;
-  source.connect(this.ctx.destination);
+  source.loop = true;
+  source.connect(expGain);
+  expGain.connect(this.ctx.destination);
   source.start();
   source.stop(this.ctx.currentTime + duracion);
+  //this.filtro.stop(this.ctx.currentTime + duracion);
   console.log(source);
 
   source.onended = function(){
     source.disconnect();
+    expGain.disconnect();
   };
 };
 Sonido.prototype.dispara = function(){
