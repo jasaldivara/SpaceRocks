@@ -105,7 +105,26 @@ const AudioContext = window.AudioContext || window.webkitAudioContext;
 
 function Sonido(){
   this.ctx = new AudioContext();
+
+  this.ruido = this.ctx.createBuffer(1, 3500, 11025);
+  var samples = this.ruido.getChannelData(0);
+  for(var i = 0; i < samples.length; i++){
+    samples[i] = Math.random() * 2 - 1;
+  }
 }
+Sonido.prototype.hazRuido = function(){
+  let duracion = 0.75;
+  var source = this.ctx.createBufferSource();
+  source.buffer = this.ruido;
+  source.connect(this.ctx.destination);
+  source.start();
+  source.stop(this.ctx.currentTime + duracion);
+  console.log(source);
+
+  source.onended = function(){
+    source.disconnect();
+  };
+};
 Sonido.prototype.dispara = function(){
   let duracion = 0.75;
   var disparoOSC = this.ctx.createOscillator();
@@ -127,8 +146,8 @@ Sonido.prototype.dispara = function(){
     console.log(disparoOSC);
     disparoOSC.disconnect();
     disparoGain.disconnect();
-  }
-}
+  };
+};
 
 function createShader(gl, type, source) {
   var shader = gl.createShader(type);
@@ -405,6 +424,7 @@ Nave.prototype.tiposColisiona = function(){
 Nave.prototype.eventoColisiona = function(spcon){
   if (spcon instanceof Roca){
     this.escenario.removeSprite(this);
+    this.escenario.sonido.hazRuido();
   }
 };
 Nave.prototype.protoInit = function(escenario){
@@ -673,6 +693,7 @@ Bala.prototype.eventoColisiona = function(spcon){
   if (spcon instanceof Roca){
     this.escenario.removeSprite(spcon);
     this.escenario.removeSprite(this);
+    this.escenario.sonido.hazRuido();
   }
 };
 Bala.prototype.radio = function(){
