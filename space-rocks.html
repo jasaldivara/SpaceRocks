@@ -137,7 +137,7 @@ Sonido.prototype.hazRuido = function(){
   source.start();
   source.stop(this.ctx.currentTime + duracion);
   //this.filtro.stop(this.ctx.currentTime + duracion);
-  console.log(source);
+  //console.log(source);
 
   source.onended = function(){
     source.disconnect();
@@ -152,7 +152,7 @@ Sonido.prototype.dispara = function(){
   disparoOSC.frequency.setValueAtTime(1000, this.ctx.currentTime);
 
   disparoGain.gain.cancelScheduledValues(this.ctx.currentTime);
-  disparoGain.gain.setValueAtTime(1, this.ctx.currentTime);
+  disparoGain.gain.setValueAtTime(0.5, this.ctx.currentTime);
   disparoOSC.frequency.exponentialRampToValueAtTime(600, this.ctx.currentTime + duracion);
   //disparoOSC.detune.exponentialRampToValueAtTime(1000, this.ctx.currentTime + duracion);
   disparoGain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + duracion);
@@ -161,8 +161,8 @@ Sonido.prototype.dispara = function(){
   disparoOSC.stop(this.ctx.currentTime + duracion);
 
   disparoOSC.onended = function(){
-    console.log('oscilador teminó');
-    console.log(disparoOSC);
+    //console.log('oscilador teminó');
+    //console.log(disparoOSC);
     disparoOSC.disconnect();
     disparoGain.disconnect();
   };
@@ -296,6 +296,7 @@ Escenario.prototype = {
     });
 
     // Loop de detección de colisiones
+    
     this.sprites.forEach(function(item, index){
       e.sprites.forEach(function(item2, index2){
         if (item2 === item){
@@ -689,13 +690,68 @@ Roca.prototype.graficos = [
     ],
     points: 12
   },
+  {
+    geometry: [
+      0, 0.5,
+      0.5, 0.5,
+      0.5, 0,
+      0.5, -0.5,
+      0, -0.5,
+      -0.5, 0,
+      -0.5, 0.5
+    ],
+    color: [
+      0.9, 0.75, 0.2, 1,
+      0.9, 0.75, 0.3, 1,
+      0.8, 0.8, 0.2, 1,
+      0.8, 0.5, 0.2, 1,
+      0.9, 0.65, 0.15, 1,
+      0.9, 0.75, 0.25, 1,
+      0.8, 0.75, 0.2, 1,
+    ],
+    points: 7
+  },
+  {
+    geometry: [
+      0, 0.5,
+      0.5, 0,
+      0, -0.5,
+      -0.25, 0,
+      -0.5, 0
+    ],
+    color: [
+      0.9, 0.65, 0.2, 1,
+      0.9, 0.7, 0.25, 1,
+      0.95, 0.85, 0.15, 1,
+      0.8, 0.6, 0.3, 1,
+      0.8, 0.75, 0.4, 1
+    ],
+    points: 5
+  }
 ];
-Roca.prototype.inicializa = function(escenario){
+Roca.prototype.clasesGraficas = [
+  {
+    graf: [2, 3],
+    radio: 0.75,
+    velocidad: 0.1
+  },
+  {
+    graf: [0, 1],
+    radio: 1,
+    velocidad: 0.05
+  }
+];
+Roca.prototype.radio = function(){
+  return this.clasegrafica.radio;
+};
+Roca.prototype.inicializa = function(escenario, tamano = 1){
   Sprite.prototype.inicializa.call(this, escenario);
 
-  this.velocidad = 0.05;
+  this.clasegrafica = this.clasesGraficas[tamano];
+  this.indiceGrafico = this.clasegrafica.graf[Math.floor(Math.random() * this.clasegrafica.graf.length)];
+
+  this.velocidad = this.clasegrafica.velocidad;
   this.direccion = Math.random() * 2 * Math.PI;
-  this.indiceGrafico = Math.floor(Math.random() * this.graficos.length);
 
   var w = escenario.zoom * escenario.resolution[0] * 2;
   this.translacion[0] = (w * Math.random()) - (w / 2);
@@ -710,9 +766,24 @@ Bala.prototype.tiposColisiona = function(){
 };
 Bala.prototype.eventoColisiona = function(spcon){
   if (spcon instanceof Roca){
+    console.log("colision:");
+    console.log(this);
+    console.log(spcon);
     this.escenario.removeSprite(spcon);
     this.escenario.removeSprite(this);
     this.escenario.sonido.hazRuido();
+
+    var r1 = new Roca();
+    r1.inicializa(this.escenario, 0);
+    r1.translacion[0] = spcon.translacion[0];
+    r1.translacion[1] = spcon.translacion[1];
+    this.escenario.sprites.push(r1);
+
+    var r2 = new Roca();
+    r2.inicializa(this.escenario, 0);
+    r2.translacion[0] = spcon.translacion[0];
+    r2.translacion[1] = spcon.translacion[1];
+    this.escenario.sprites.push(r2);
   }
 };
 Bala.prototype.radio = function(){
