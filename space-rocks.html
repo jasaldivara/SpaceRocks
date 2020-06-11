@@ -748,6 +748,7 @@ Roca.prototype.radio = function(){
 Roca.prototype.inicializa = function(escenario, tamano = 1){
   Sprite.prototype.inicializa.call(this, escenario);
 
+  this.tamano = tamano;
   this.clasegrafica = this.clasesGraficas[tamano];
   this.indiceGrafico = this.clasegrafica.graf[Math.floor(Math.random() * this.clasegrafica.graf.length)];
 
@@ -774,17 +775,21 @@ Bala.prototype.eventoColisiona = function(spcon){
     this.escenario.removeSprite(this);
     this.escenario.sonido.hazRuido();
 
-    var r1 = new Roca();
-    r1.inicializa(this.escenario, 0);
-    r1.translacion[0] = spcon.translacion[0];
-    r1.translacion[1] = spcon.translacion[1];
-    this.escenario.sprites.push(r1);
 
-    var r2 = new Roca();
-    r2.inicializa(this.escenario, 0);
-    r2.translacion[0] = spcon.translacion[0];
-    r2.translacion[1] = spcon.translacion[1];
-    this.escenario.sprites.push(r2);
+    if (spcon.tamano > 0){
+      var t = spcon.tamano - 1;
+      var r1 = new Roca();
+      r1.inicializa(this.escenario, t);
+      r1.translacion[0] = spcon.translacion[0];
+      r1.translacion[1] = spcon.translacion[1];
+      this.escenario.sprites.push(r1);
+
+      var r2 = new Roca();
+      r2.inicializa(this.escenario, t);
+      r2.translacion[0] = spcon.translacion[0];
+      r2.translacion[1] = spcon.translacion[1];
+      this.escenario.sprites.push(r2);
+    }
   }
 };
 Bala.prototype.radio = function(){
