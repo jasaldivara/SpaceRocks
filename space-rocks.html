@@ -296,9 +296,10 @@ Escenario.prototype = {
     });
 
     // Loop de detección de colisiones
-    
-    this.sprites.forEach(function(item, index){
-      e.sprites.forEach(function(item2, index2){
+    var spclon = this.sprites.slice();
+
+    spclon.forEach(function(item, index){
+      spclon.forEach(function(item2, index2){
         if (item2 === item){
           return;
         }
