@@ -23,14 +23,14 @@ canvas {
 
 .boton {
   font-family: 'Righteous', cursive;
-  font-size: xx-large;
+  font-size: x-large;
   text-transform: uppercase;
-  font-weight: bold;
+  /* font-weight: bold; */
   padding: 1em;
   color: #3FF;
   background-color: #333;
   cursor: pointer;
-  border: 2px solid #3AA;
+  border: 2px dotted #3AA;
 }
 
 .boton:hover {
@@ -43,9 +43,11 @@ canvas {
 </head>
 <body>
   <h1>Space Rocks</h1>
-  <form>
-    <button id="btnInicia" type="button" class="boton" autofocus>Iniciar juego</button>
-  </form>
+  <div>
+    <form>
+      <button id="btnInicia" type="button" class="boton" autofocus>Iniciar juego</button>
+    </form>
+  </div>
 <script id="2d-vertex-shader" type="notjs">
  
   // an attribute will receive data from a buffer
@@ -490,8 +492,12 @@ Nave.prototype.inicializa = function(escenario){
       case ' ':
         s.dispara();
         break;
+      default:
+        return;
     }
-  });
+    e.preventDefault();
+    return;
+  }, false);
 
   window.addEventListener("keyup", function(e){
     switch(e.key){
@@ -865,9 +871,21 @@ b.addEventListener('click', function(e){
   var parent = this.parentElement.parentElement;
   this.parentElement.removeChild(this);
   var canvas = document.createElement('canvas');
-  canvas.setAttribute('width', '1200');
-  canvas.setAttribute('height', '800');
+  canvas.setAttribute('width', '800');
+  canvas.setAttribute('height', '600');
   parent.appendChild(canvas);
+
+  var controlForm = document.createElement('form');
+  var btnFullscreen = document.createElement('button');
+  btnFullscreen.classList.add('boton');
+  btnFullscreen.innerText = "Pantalla Completa";
+  controlForm.appendChild(btnFullscreen);
+  parent.appendChild(controlForm);
+
+  btnFullscreen.addEventListener('click', function(e){
+    canvas.requestFullscreen();
+    e.preventDefault();
+  });
 
   //var canvas = document.getElementById('lienzo');
 
@@ -876,6 +894,7 @@ b.addEventListener('click', function(e){
     var gl = canvas.getContext('webgl');
     if (gl){
       inicializa(gl, canvas);
+      canvas.requestFullscreen();
     } else {
       alert("Error: Navegador no soporta WebGL");
     }
@@ -889,6 +908,6 @@ b.addEventListener('click', function(e){
 
 </script>
 
-
+<p>&copy; 2020, 2023 Jesús Abelardo Saldívar Aguilar</p>
 </body>
 </html>
