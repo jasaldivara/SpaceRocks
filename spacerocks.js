@@ -1,5 +1,5 @@
 
-// for legacy browsers
+// para navegadores antiguos
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 
 
