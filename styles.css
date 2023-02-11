@@ -1,0 +1,32 @@
+
+body {
+  font-family: 'Righteous', cursive;  background-color: #333;
+  color: rgb(243, 209, 56);
+}
+
+h1 {
+  font-weight: normal;
+  font-size: 3em;
+}
+
+canvas {
+  border: 2px solid #3AA;
+}
+
+.boton {
+  font-family: 'Righteous', cursive;
+  font-size: x-large;
+  text-transform: uppercase;
+  /* font-weight: bold; */
+  padding: 1em;
+  color: #3FF;
+  background-color: #333;
+  cursor: pointer;
+  border: 2px dotted #3AA;
+}
+
+.boton:hover {
+  color: #6DD;
+  background-color: #111;
+}
+
