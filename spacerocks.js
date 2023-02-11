@@ -769,8 +769,10 @@ b.addEventListener('click', function(e){
   var parent = this.parentElement.parentElement;
   this.parentElement.removeChild(this);
   var canvas = document.createElement('canvas');
-  canvas.setAttribute('width', '800');
-  canvas.setAttribute('height', '600');
+  canvas.setAttribute('width', window.screen.width);
+  canvas.setAttribute('height', window.screen.height);
+  //canvas.setAttribute('width', '1200');
+  //canvas.setAttribute('height', '800');
   parent.appendChild(canvas);
 
   var controlForm = document.createElement('form');
