@@ -10,18 +10,20 @@
 </head>
 <body>
   <h1>Space Rocks</h1>
-  <div>
-    <form>
-      <button id="btnInicia" type="button" class="boton" autofocus>{{ page.startgame }}</button>
-    </form>
-  </div>
+  <main>
+    <div>
+      <button id="btnInicia" type="button" class="boton bloque">{{ page.startgame }}</button>
+      <button type="button" class="boton bloque" id="btn.fullscreen">{{ page.fullscreen }}</button>
+      {{ content }}
+    </div>
+    <div>
+      <canvas id="areadejuego" width="600" height="400">
+      </canvas>
+    </div>
+  </main>
+
+<p>&copy; 2020, 2023 Jesús Abelardo Saldívar Aguilar</p>
 
 <script src="spacerocks.js" type="text/javascript" defer="defer"></script>
-<form>
-  <button type="button" class="boton" id="btn.fullscreen">{{ page.fullscreen }}</button><br>
-</form>
-
-{{ content }}
-<p>&copy; 2020, 2023 Jesús Abelardo Saldívar Aguilar</p>
 </body>
 </html>

@@ -37,6 +37,15 @@ dd {
   margin-bottom: 0.5em;
 }
 
+main {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+main > div {
+  margin: 1em;
+}
+
 canvas {
   border: 2px solid #3AA;
   width: 600px;
@@ -48,11 +57,16 @@ canvas {
   font-size: x-large;
   text-transform: uppercase;
   /* font-weight: bold; */
-  padding: 1em;
+  padding: 0.75em;
   color: #f08;
   background-color: #222;
   cursor: pointer;
-  border: 2px dotted #3AA;
+  border: 4px dotted #99daff;
+}
+
+.bloque {
+  display: block;
+  margin-bottom: 0.5em;
 }
 
 .boton:hover {

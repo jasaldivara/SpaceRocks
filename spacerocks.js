@@ -810,14 +810,16 @@ function inicializa(gl, elemento){
 var btnInicia = document.getElementById('btnInicia');
 btnInicia.addEventListener('click', function(e){
   //alert (this);
-  var parent = this.parentElement.parentElement;
+
+  // Borrando botón para prevenie errores de multiples inicializaiones
+  // TODO: Hacer que se reinicie el juego al hqcer click
   this.parentElement.removeChild(this);
-  var canvas = document.createElement('canvas');
+
+  var canvas = document.getElementById('areadejuego');
   canvas.setAttribute('width', window.screen.width);
   canvas.setAttribute('height', window.screen.height);
   //canvas.setAttribute('width', '1200');
   //canvas.setAttribute('height', '800');
-  parent.appendChild(canvas);
 
   var btnFullscreen = document.getElementById('btn.fullscreen');
 

@@ -4,7 +4,7 @@ lang: es
 startgame: Iniciar Juego
 fullscreen: Pantalla Completa
 ---
-### Controles
+### Controles:
 
 Flecha Izquierda
 : Gira a la izquierda

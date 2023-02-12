@@ -4,7 +4,7 @@ lang: en
 startgame: Start Game
 fullscreen: Full Screen
 ---
-### Controls
+### Controls:
 
 Left arrow
 : Spin Left
