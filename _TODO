@@ -1,19 +1,21 @@
 TODO
 
 1.-
-  Colisiones simples
-    Primero: Agregar propiedad Radio a Sprites
-    Desaparecer Rocal y bala cuando chocan
-    Desaparecer Nave cuando choca con Roca
   Que se tenga que volver a presionar el boton cada vez que se dispare
   Numero máximo de balas simultaneas
   Rocas grandes, medianas y chicas
 
 1.5.-
-  Sonidos (disparos, colisión de nave con rocas)
-  Explosión al hacer colisión de nave con rocas
   Inicio de juego, perder y volver a comenzar
 
 2.-
   Enemigos
   Disparos de enemigos
+
+Nuevos:
+
+  Animación/explosión de partículas cuando la nave del jugador es destruida
+  ¿rocas pequeñas más rápidas?
+  Que roca grande se divida en cuatro
+  Hasta tres niveles de rocas
+

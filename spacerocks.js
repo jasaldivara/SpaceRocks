@@ -682,7 +682,7 @@ Roca.prototype.clasesGraficas = [
   {
     graf: [2, 3],
     radio: 0.75,
-    velocidad: 0.1
+    velocidad: 0.15
   },
   {
     graf: [0, 1],
