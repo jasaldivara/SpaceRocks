@@ -3,6 +3,7 @@ layout: spacerocks
 lang: en
 startgame: Start Game
 fullscreen: Full Screen
+textlang: Select Language
 ---
 ### Controls:
 

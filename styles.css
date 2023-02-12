@@ -52,6 +52,14 @@ canvas {
   height: auto;
 }
 
+button {
+  color: #f08;
+  background-color: #222;
+  border: 4px dotted #99daff;
+  padding: 0.5em;
+  cursor: pointer;
+}
+
 .boton {
   font-family: 'Righteous', cursive;
   font-size: x-large;
@@ -72,5 +80,31 @@ canvas {
 .boton:hover {
   color: #ff2a9b;
   background-color: #111;
+}
+
+:link, :visited {
+  color: #99daff;
+  text-decoration: none;
+}
+:link:hover, :visited:hover {
+  color: #99daff;
+  text-decoration: underline;
+}
+
+nav {
+  position: relative;
+}
+
+nav > ul {
+  display: none;
+  position: absolute;
+  color: #f08;
+  background-color: #222;
+  border: 4px solid rgb(243, 209, 56);
+  padding: 1em 2em;
+  margin: 0;
+}
+nav:focus-within > ul {
+  display: inline-block;
 }
 
