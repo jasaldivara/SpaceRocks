@@ -103,8 +103,52 @@ function Escenario(gl, tipos){
   var es = this;
   console.log(tipos);
 
-  var vertexShaderSource = document.getElementById("2d-vertex-shader").text;
-  var fragmentShaderSource = document.getElementById("2d-fragment-shader").text;
+  var vertexShaderSource = `
+  // an attribute will receive data from a buffer
+  attribute vec2 a_position;
+  attribute vec4 a_color;
+
+  uniform vec2 u_resolution;
+  uniform float u_escala;
+  uniform float u_rotacion;
+  uniform vec2 u_translation;
+
+  varying vec4 v_color;
+
+  // all shaders have a main function
+  void main() {
+
+
+    vec2 posicionRotada = vec2 (a_position.y * sin(u_rotacion) - a_position.x * cos(u_rotacion),
+    a_position.x * sin(u_rotacion) + a_position.y * cos(u_rotacion));
+
+    vec2 position = posicionRotada + u_translation;
+
+    // convert the position from pixels to 0.0 to 1.0
+    vec2 zeroToOne = position / ( u_resolution * u_escala );
+
+    gl_Position = vec4(zeroToOne, 0, 1);
+
+    v_color = a_color;
+    gl_PointSize = 4.0;
+  }
+  `;
+  var fragmentShaderSource = `
+  // fragment shaders don't have a default precision so we need
+  // to pick one. mediump is a good default
+  precision mediump float;
+
+  // uniform vec4 u_color;
+
+  varying vec4 v_color;
+
+  void main() {
+    // gl_FragColor is a special variable a fragment shader
+    // is responsible for setting
+    gl_FragColor = v_color;
+
+  }
+  `;
   
   var vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
   var fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
@@ -763,8 +807,8 @@ function inicializa(gl, elemento){
 
 
 
-var b = document.getElementById('btnInicia');
-b.addEventListener('click', function(e){
+var btnInicia = document.getElementById('btnInicia');
+btnInicia.addEventListener('click', function(e){
   //alert (this);
   var parent = this.parentElement.parentElement;
   this.parentElement.removeChild(this);
@@ -775,12 +819,7 @@ b.addEventListener('click', function(e){
   //canvas.setAttribute('height', '800');
   parent.appendChild(canvas);
 
-  var controlForm = document.createElement('form');
-  var btnFullscreen = document.createElement('button');
-  btnFullscreen.classList.add('boton');
-  btnFullscreen.innerText = "Pantalla Completa";
-  controlForm.appendChild(btnFullscreen);
-  parent.appendChild(controlForm);
+  var btnFullscreen = document.getElementById('btn.fullscreen');
 
   btnFullscreen.addEventListener('click', function(e){
     canvas.requestFullscreen();
