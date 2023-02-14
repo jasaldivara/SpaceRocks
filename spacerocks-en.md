@@ -19,3 +19,5 @@ Up Arrow
 Space Bar
 : Shoot
 
+For start the game again: Please reload the page in your browser.
+

@@ -19,3 +19,5 @@ Flecha Arriba
 Barra Espaciadora
 : Disparar
 
+Para volver a iniciar el juego, por favor recargue la página en su navegador.
+
