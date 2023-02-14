@@ -1,7 +1,7 @@
 
 # Space Rocks
 
-Old Scholl retro space shooter arcade game in WebGL
+Old School retro space shooter arcade game in WebGL
 
 I made this in 2020, but I didn't have it published until now (2023)
 
