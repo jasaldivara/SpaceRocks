@@ -108,6 +108,7 @@ function Escenario(gl, tipos){
   attribute vec3 a_position;
   attribute vec4 a_color;
 
+  uniform float u_sprite_scale;
   uniform vec2 u_resolution;
   uniform float u_escala;
   uniform float u_rotacion;
@@ -118,16 +119,16 @@ function Escenario(gl, tipos){
   // all shaders have a main function
   void main() {
 
-
-    vec2 posicionRotada = vec2 (a_position.y * sin(u_rotacion) - a_position.x * cos(u_rotacion),
-    a_position.x * sin(u_rotacion) + a_position.y * cos(u_rotacion));
+    vec3 posicionScale = a_position * u_sprite_scale;
+    vec2 posicionRotada = vec2 (posicionScale.y * sin(u_rotacion) - posicionScale.x * cos(u_rotacion),
+    posicionScale.x * sin(u_rotacion) + posicionScale.y * cos(u_rotacion));
 
     vec2 position = posicionRotada + u_translation;
 
     // convert the position from pixels to 0.0 to 1.0
     vec2 zeroToOne = position / ( u_resolution * u_escala );
 
-    gl_Position = vec4(zeroToOne, a_position.z, 1);
+    gl_Position = vec4(zeroToOne, posicionScale.z, 1);
 
     v_color = a_color;
     gl_PointSize = 4.0;
@@ -164,6 +165,7 @@ function Escenario(gl, tipos){
   this.resolutionUniformLocation = gl.getUniformLocation(program, "u_resolution");
   this.escalaUniformLocation = gl.getUniformLocation(program, "u_escala");
   this.rotacionUniformLocation = gl.getUniformLocation(program, "u_rotacion");
+  this.spriteScaleUniformLocation = gl.getUniformLocation(program, "u_sprite_scale");
   // var colorUniformLocation = gl.getUniformLocation(program, "u_color");
   this.translationLocation = gl.getUniformLocation(program, "u_translation");
 
@@ -319,6 +321,7 @@ Sprite.prototype = {
   inicializa: function(escenario){
     this.translacion = [0, 0]
     this.rotacion = 0;
+    this.scale = 1;
 
     this.escenario = escenario;
     //escenario.addSprite(this);
@@ -329,6 +332,9 @@ Sprite.prototype = {
   },
   setRotacion: function(rotacion){
     this.rotacion = rotacion;
+  },
+  setScale: function(scale){
+    this.scale = scale;
   },
   setGeometry: function(){},
   setColors: function(){},
@@ -356,6 +362,7 @@ Sprite.prototype = {
         this.escenario.colorLocation, size, type, normalize, stride, offset);
     gl.uniform2fv(this.escenario.translationLocation, this.translacion);
     gl.uniform1f(this.escenario.rotacionUniformLocation, this.rotacion);
+    gl.uniform1f(this.escenario.spriteScaleUniformLocation, this.scale);
     gl.drawArrays(this.primitive(), this.firstPoint(), this.pointsCount());  // La cantidad de puntos a procesar depende de la clase en particular
   },
   frame: function(){
@@ -392,6 +399,11 @@ Nave.prototype.eventoColisiona = function(spcon){
   if (spcon instanceof Roca){
     this.escenario.removeSprite(this);
     this.escenario.sonido.hazRuido();
+    var e = new Explosion();
+    e.inicializa(this.escenario);
+    e.translacion[0] = this.translacion[0];
+    e.translacion[1] = this.translacion[1];
+    this.escenario.sprites.push(e);
   }
 };
 Nave.prototype.protoInit = function(escenario){
@@ -402,7 +414,7 @@ Nave.prototype.protoInit = function(escenario){
 }
 Nave.prototype.inicializa = function(escenario){
   Sprite.prototype.inicializa.call(this, escenario);
-
+  //this.setScale(2.5);
   //this.pointsCount = 6;
 
   // TODO: Mover estos a su propia función u objeto de contol por teclado (o joystick)
@@ -830,6 +842,25 @@ Explosion.prototype.setColors = function(){
     this.gl.STATIC_DRAW);
 };
 
+Explosion.prototype.subframe = function(){
+  //console.log("Hola");
+
+  this.duracion --;
+  if (this.duracion <= 0){
+    this.escenario.removeSprite(this);
+  }
+
+  this.setScale(this.scale * 1.05);
+  return[0,0];
+}
+
+Explosion.prototype.inicializa = function(escenario, translacion, direccion, nvx, nvy){
+  Sprite.prototype.inicializa.call(this, escenario);
+  this.setScale(1);
+  this.duracion = 60;
+}
+
+
 var tipos = [Nave, Roca, Bala, Explosion];
 
 function inicializa(gl, elemento){
@@ -843,7 +874,7 @@ function inicializa(gl, elemento){
   e.crearSprite(Roca);
   e.crearSprite(Roca);
   e.crearSprite(Roca);
-  e.crearSprite(Explosion);
+  //e.crearSprite(Explosion);
   e.draw();
 
 }
