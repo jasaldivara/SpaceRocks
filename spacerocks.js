@@ -105,7 +105,7 @@ function Escenario(gl, tipos){
 
   var vertexShaderSource = `
   // an attribute will receive data from a buffer
-  attribute vec2 a_position;
+  attribute vec3 a_position;
   attribute vec4 a_color;
 
   uniform vec2 u_resolution;
@@ -127,7 +127,7 @@ function Escenario(gl, tipos){
     // convert the position from pixels to 0.0 to 1.0
     vec2 zeroToOne = position / ( u_resolution * u_escala );
 
-    gl_Position = vec4(zeroToOne, 0, 1);
+    gl_Position = vec4(zeroToOne, a_position.z, 1);
 
     v_color = a_color;
     gl_PointSize = 4.0;
@@ -337,7 +337,7 @@ Sprite.prototype = {
     gl.enableVertexAttribArray(this.escenario.positionAttributeLocation);
     gl.bindBuffer(gl.ARRAY_BUFFER, this.getPositionBuffer());
     // Tell the attribute how to get data out of positionBuffer (ARRAY_BUFFER)
-    var size = 2;          // 2 components per iteration
+    var size = 3;          // 2 components per iteration
     var type = gl.FLOAT;   // the data is 32bit floats
     var normalize = false; // don't normalize the data
     var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
@@ -466,12 +466,12 @@ Nave.prototype.inicializa = function(escenario){
 Nave.prototype.setGeometry = function(){
   var gl = this.gl;
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
-    0, 1,
-    0.75, -1,
-    0, -0.5,
-    0, -0.5,
-    -0.75, -1,
-    0, 1
+    0, 1, 0,
+    0.75, -1, 0,
+    0, -0.5, 0,
+    0, -0.5, 0,
+    -0.75, -1, 0,
+    0, 1, 0
   ]), gl.STATIC_DRAW);
 };
 Nave.prototype.setColors = function(){
@@ -579,19 +579,19 @@ Roca.prototype.protoInit = function(escenario){
 Roca.prototype.graficos = [
   {
     geometry: [
-      0, 0,
-      -0.5, 0.5,
-      -0.5, 1,
-      0.5, 1,
-      1, 0.5,
-      1, 0,
-      0.5, -0.5,
-      0.5, -1,
-      0, -1,
-      -0.5, -0.5,
-      -1, -0.5,
-      -1, 0,
-      -0.5, 0.5
+      0, 0, 0,
+      -0.5, 0.5, 0,
+      -0.5, 1, 0,
+      0.5, 1, 0,
+      1, 0.5, 0,
+      1, 0, 0,
+      0.5, -0.5, 0,
+      0.5, -1, 0,
+      0, -1, 0,
+      -0.5, -0.5, 0,
+      -1, -0.5, 0,
+      -1, 0, 0,
+      -0.5, 0.5, 0
     ],
     color: [
       0.9, 0.75, 0.2, 1,
@@ -612,18 +612,18 @@ Roca.prototype.graficos = [
   },
   {
     geometry: [
-      0, 0,
-      -0.75, 0.65,
-      -0.85, 0.7,
-      0.65, 0.5,
-      0.9, 0.35,
-      0.7, 0.1,
-      0.35, -0.65,
-      0.25, -1.2,
-      0.1, -0.85,
-      -0.65, -0.65,
-      -0.9, -0.75,
-      -0.85, 0.25,
+      0, 0, 0,
+      -0.75, 0.65, 0,
+      -0.85, 0.7, 0,
+      0.65, 0.5, 0,
+      0.9, 0.35, 0,
+      0.7, 0.1, 0,
+      0.35, -0.65, 0,
+      0.25, -1.2, 0,
+      0.1, -0.85, 0,
+      -0.65, -0.65, 0,
+      -0.9, -0.75, 0,
+      -0.85, 0.25, 0
     ],
     color: [
       0.9, 0.75, 0.2, 1,
@@ -643,13 +643,13 @@ Roca.prototype.graficos = [
   },
   {
     geometry: [
-      0, 0.5,
-      0.5, 0.5,
-      0.5, 0,
-      0.5, -0.5,
-      0, -0.5,
-      -0.5, 0,
-      -0.5, 0.5
+      0, 0.5, 0,
+      0.5, 0.5, 0,
+      0.5, 0, 0,
+      0.5, -0.5, 0,
+      0, -0.5, 0,
+      -0.5, 0, 0,
+      -0.5, 0.5, 0
     ],
     color: [
       0.9, 0.75, 0.2, 1,
@@ -664,11 +664,11 @@ Roca.prototype.graficos = [
   },
   {
     geometry: [
-      0, 0.5,
-      0.5, 0,
-      0, -0.5,
-      -0.25, 0,
-      -0.5, 0
+      0, 0.5, 0,
+      0.5, 0, 0,
+      0, -0.5, 0,
+      -0.25, 0, 0,
+      -0.5, 0, 0
     ],
     color: [
       0.9, 0.65, 0.2, 1,
@@ -748,7 +748,7 @@ Bala.prototype.radio = function(){
 Bala.prototype.setGeometry = function(){
   var gl = this.gl;
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
-    0, 0
+    0, 0, 0
     ]), gl.STATIC_DRAW);
 };
 Bala.prototype.setColors = function(){
@@ -793,7 +793,7 @@ Bala.prototype.subframe = function(){
 function Explosion(){}
 Explosion.prototype = new Sprite();
 
-Explosion.prototype.numPuntos = 64;
+Explosion.prototype.numPuntos = 256;
 Explosion.prototype.pointsCount = function(){
   return this.numPuntos;
 };
@@ -803,11 +803,15 @@ Explosion.prototype.primitive = function(){
 Explosion.prototype.setGeometry = function (){
   var puntos = [];
   for (let i = 0; i < this.numPuntos; i ++){
-    let ang = Math.random() * Math.PI * 2;
-    let x = Math.sin(ang);
-    let y = Math.cos(ang);
+    let angz = Math.random() * Math.PI * 2;
+    let angy = Math.random() * Math.PI * 2;
+    let x = Math.cos(angz);
+    let y = Math.sin(angz);
+    x = (x * Math.cos(angy));
+    let z = x * Math.sin(angy);
     puntos.push(x);
     puntos.push(y);
+    puntos.push(z);
   }
   this.gl.bufferData(this.gl.ARRAY_BUFFER,
     new Float32Array(puntos),
