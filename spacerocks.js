@@ -378,7 +378,9 @@ Sprite.prototype = {
     }
 
   },
-  subframe: function(){}
+  subframe: function(){
+    return [0,0];
+  }
 };
 
 function Nave(){}
@@ -788,7 +790,43 @@ Bala.prototype.subframe = function(){
   return [this.vx, this.vy];
 }
 
-var tipos = [Nave, Roca, Bala];
+function Explosion(){}
+Explosion.prototype = new Sprite();
+
+Explosion.prototype.numPuntos = 64;
+Explosion.prototype.pointsCount = function(){
+  return this.numPuntos;
+};
+Explosion.prototype.primitive = function(){
+  return this.gl.POINTS;
+};
+Explosion.prototype.setGeometry = function (){
+  var puntos = [];
+  for (let i = 0; i < this.numPuntos; i ++){
+    let ang = Math.random() * Math.PI * 2;
+    let x = Math.sin(ang);
+    let y = Math.cos(ang);
+    puntos.push(x);
+    puntos.push(y);
+  }
+  this.gl.bufferData(this.gl.ARRAY_BUFFER,
+    new Float32Array(puntos),
+    this.gl.STATIC_DRAW);
+};
+Explosion.prototype.setColors = function(){
+  var colores = [];
+  for (let i = 0; i < this.numPuntos; i ++){
+    colores.push(Math.random());
+    colores.push(Math.random());
+    colores.push(Math.random());
+    colores.push(1.0);
+  }
+  this.gl.bufferData(this.gl.ARRAY_BUFFER,
+    new Float32Array(colores),
+    this.gl.STATIC_DRAW);
+};
+
+var tipos = [Nave, Roca, Bala, Explosion];
 
 function inicializa(gl, elemento){
   console.log("WebGL está soportado por el navegador");
@@ -801,6 +839,7 @@ function inicializa(gl, elemento){
   e.crearSprite(Roca);
   e.crearSprite(Roca);
   e.crearSprite(Roca);
+  e.crearSprite(Explosion);
   e.draw();
 
 }
