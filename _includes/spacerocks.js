@@ -120,8 +120,9 @@ function Escenario(gl, tipos){
   void main() {
 
     vec3 posicionScale = a_position * u_sprite_scale;
-    vec2 posicionRotada = vec2 (posicionScale.y * sin(u_rotacion) - posicionScale.x * cos(u_rotacion),
-    posicionScale.x * sin(u_rotacion) + posicionScale.y * cos(u_rotacion));
+    vec2 posicionRotada = vec2 (
+      posicionScale.y * sin(u_rotacion) - posicionScale.x * cos(u_rotacion),
+      posicionScale.x * sin(u_rotacion) + posicionScale.y * cos(u_rotacion));
 
     vec2 position = posicionRotada + u_translation;
 
@@ -851,6 +852,7 @@ Explosion.prototype.subframe = function(){
   }
 
   this.setScale(this.scale * 1.05);
+  //this.rotacion += 0.05;
   //console.log("Explosion Velocidad: " + this.velocidad);
   return this.velocidad;
 }
@@ -923,6 +925,7 @@ btnInicia.addEventListener('click', function(e){
 
   }
 });
+
 
 
 
