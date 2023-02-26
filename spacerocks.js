@@ -400,9 +400,9 @@ Nave.prototype.eventoColisiona = function(spcon){
     this.escenario.removeSprite(this);
     this.escenario.sonido.hazRuido();
     var e = new Explosion();
-    e.inicializa(this.escenario);
-    e.translacion[0] = this.translacion[0];
-    e.translacion[1] = this.translacion[1];
+    let nvx = this.velocidadAvanza[0] / 3;
+    let nvy = this.velocidadAvanza[1] / 3;
+    e.inicializa(this.escenario, this.translacion, [nvx, nvy]);
     this.escenario.sprites.push(e);
   }
 };
@@ -851,11 +851,14 @@ Explosion.prototype.subframe = function(){
   }
 
   this.setScale(this.scale * 1.05);
-  return[0,0];
+  //console.log("Explosion Velocidad: " + this.velocidad);
+  return this.velocidad;
 }
 
-Explosion.prototype.inicializa = function(escenario, translacion, direccion, nvx, nvy){
+Explosion.prototype.inicializa = function(escenario, translacion, velocidadxy){
   Sprite.prototype.inicializa.call(this, escenario);
+  this.velocidad = velocidadxy;
+  this.translacion = translacion;
   this.setScale(1);
   this.duracion = 60;
 }
@@ -920,5 +923,6 @@ btnInicia.addEventListener('click', function(e){
 
   }
 });
+
 
 
